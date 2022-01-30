@@ -1,2 +1,8 @@
-@import './variable.scss';
-@import './component.scss';
+@import './header.scss';
+@import './footer.scss';
+
+body {
+  font-family: "Noto Sans JP", sans-serif;
+  color: #34363B;
+}
+

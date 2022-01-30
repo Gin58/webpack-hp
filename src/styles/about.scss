@@ -1,3 +1,46 @@
-.box {
-  color: #000;
+@import './variable';
+@import './mixin';
+
+.main {
+  &__content {
+    padding: 60px 0;
+    background-color: $color-lightGray;
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+    align-items: center;
+    @include mq-sp {
+      padding: 40px 0;
+    }
+  }
+  &__title {
+    font-size: 36px;
+    color: $color-textColor;
+    font-weight: bold;
+    margin-bottom: 42px;
+    @include mq-sp {
+      font-size: 18px;
+    }
+  }
+  &__text {
+    max-width: 600px;
+    letter-spacing: 1.5px;
+    line-height: 2;
+    @include mq-sp {
+      font-size: 14px;
+      margin: 0 20px;
+      letter-spacing: 2;
+    }
+  }
+  &__image {
+    margin: 80px 100px;
+    text-align: center;
+    @include mq-sp {
+      margin: 40px 20px;
+    }
+    img {
+      max-width: 1080px;
+      width: 100%;
+    }
+  }
 }

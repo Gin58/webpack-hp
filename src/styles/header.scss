@@ -1,0 +1,130 @@
+@import './mixin';
+@import './variable';
+@import './keyframes';
+
+.header {
+  max-width: 1280px;
+  max-height: 100px;
+  @include mq-sp {
+    max-width: 768px;
+    max-height: 80px;
+  }
+  &__top {
+    padding: 24px 48px;
+    @include mq-sp {
+      padding: 15px;
+    }
+  }
+  &__topMain {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    @include mq-sp {
+      font-size: 18px;
+    }
+  }
+  &__topSub {
+    font-size: 14px;
+    color: $color-lightBlue;
+    @include mq-sp {
+      font-size: 12px;
+    }
+  }
+}
+
+.hamburger {
+  display: block;
+  position: fixed;
+  right: 30px;
+  top: 20px;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  z-index: 300;
+  @include mq-sp {
+    right: 10px;
+    top: 10px;
+  }
+  &__line {
+    position: absolute;
+    left: 11px;
+    width: 22px;
+    height: 2px;
+    background-color: #000;
+    -webkit-transition: all 0.6s;
+    transition: all 0.6s;
+  }
+  &__line-1 {
+    top: 18px;
+  }
+  &__line-2 {
+    top: 26px;
+    width: 25px;
+  }
+  &__line-3 {
+    top: 34px;
+  }
+}
+
+.nav {
+  display: flex;
+  position: fixed;
+  width: 100%;
+  height: 100vh;
+  background-color: #FFFFFF;
+  transition: all 0.6s;
+  z-index: 200;
+  overflow-y: hidden;
+  opacity: 0;
+  visibility: hidden;
+  &__list {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+    margin: 0 auto;
+    list-style: none;
+    &__item {
+      text-align: center;
+      z-index: 500;
+      &:hover {
+        a {
+          color: $color-lightBlue;
+          border-bottom: 1px solid $color-lightBlue;
+        }
+      }
+      a {
+        display: block;
+        text-decoration: none;
+        margin: 30px 0;
+        font-size: 24px;
+        color: $color-textBlack;
+        @include mq-sp {
+          font-size: 18px;
+        }
+      }
+    }
+  }
+  &__open {
+    .nav {
+      opacity: 1;
+      visibility: visible;
+    }
+    .hamburger__line {
+      background-color: #34363B;
+    }
+    .hamburger__line-1 {
+      transform: rotate(45deg);
+      top: 20px;
+    }
+    .hamburger__line-2 {
+      width: 0;
+      left: 50%;
+    }
+    .hamburger__line-3 {
+      transform: rotate(-45deg);
+      top: 20px;
+    }
+  }
+}
