@@ -2,6 +2,8 @@ import MiniCssExtractPlugin from "mini-css-extract-plugin";
 import path from "path";
 import * as webpack from "webpack";
 import entries from "./webpack/entries";
+import globule from "globule";
+import HtmlWebpackPlugin from "html-webpack-plugin";
 
 const NODE_ENV = "development";
 // const NODE_ENV = "production";
@@ -57,10 +59,8 @@ if (process.env.es5) {
   });
 }
 
-// const htmlFiles = globule.find("src/html/**/*.html");
-
 // let rules: webpack.
-module.exports = {
+const config: webpack.Configuration = {
   mode: NODE_ENV,
   entry: entries,
   module: {
@@ -68,7 +68,7 @@ module.exports = {
   },
   output: {
     path: `${__dirname}/dist`,
-    filename: "[name].js",
+    filename: "js/[name].js",
   },
   resolve: {
     extensions: [".ts", ".tsx", ".js", ".json"],
@@ -76,10 +76,28 @@ module.exports = {
       "@": path.resolve(__dirname, "src"),
       "~": path.resolve(__dirname, "src"),
     },
+    roots: [path.resolve(__dirname, "src")],
   },
   plugins: [
     new MiniCssExtractPlugin({
-      filename: "[name].css",
+      filename: "styles/[name].css",
     }),
   ],
 };
+
+const htmlFiles = globule.find("src/html/**/*.html");
+htmlFiles.forEach((src) => {
+  const htmlname = src.replace(/src\/html\//g, "");
+  const filename = htmlname.substring(0, htmlname.lastIndexOf("."));
+  config.plugins?.push(
+    new HtmlWebpackPlugin({
+      filename: `${path.resolve(__dirname, "dist")}/${htmlname}`,
+      inject: "body",
+      template: src,
+      minify: false,
+      chunks: [filename, `${filename}.css`],
+    })
+  );
+});
+
+export default config;
