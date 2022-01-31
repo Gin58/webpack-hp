@@ -1,8 +1,12 @@
 import MiniCssExtractPlugin from "mini-css-extract-plugin";
 import path from "path";
 import * as webpack from "webpack";
+import entries from "./webpack/entries";
+import globule from "globule";
+import HtmlWebpackPlugin from "html-webpack-plugin";
 
 const NODE_ENV = "development";
+// const NODE_ENV = "production";
 
 let rules: webpack.RuleSetRule[] = [
   {
@@ -18,9 +22,7 @@ let rules: webpack.RuleSetRule[] = [
     test: /\.(sa|sc|c)ss$/,
     exclude: /node_modules/,
     use: [
-      process.env.NODE_ENV !== "production"
-        ? "style-loader"
-        : MiniCssExtractPlugin.loader,
+      MiniCssExtractPlugin.loader,
       {
         loader: "css-loader",
         options: { url: true },
@@ -34,6 +36,12 @@ let rules: webpack.RuleSetRule[] = [
       filename: "images/[name][ext][query]",
     },
     type: "asset/resource",
+  },
+  {
+    test: /\.(html)$/,
+    use: {
+      loader: "html-loader",
+    },
   },
 ];
 
@@ -52,18 +60,15 @@ if (process.env.es5) {
 }
 
 // let rules: webpack.
-module.exports = {
+const config: webpack.Configuration = {
   mode: NODE_ENV,
-  entry: {
-    main: "./src/js/main.ts",
-    about: ["./src/js/about.js", "./src/styles/about.scss"],
-  },
+  entry: entries,
   module: {
     rules: rules,
   },
   output: {
     path: `${__dirname}/dist`,
-    filename: "[name].js",
+    filename: "js/[name].js",
   },
   resolve: {
     extensions: [".ts", ".tsx", ".js", ".json"],
@@ -71,10 +76,28 @@ module.exports = {
       "@": path.resolve(__dirname, "src"),
       "~": path.resolve(__dirname, "src"),
     },
+    roots: [path.resolve(__dirname, "src")],
   },
   plugins: [
     new MiniCssExtractPlugin({
-      filename: "[name].css",
+      filename: "styles/[name].css",
     }),
   ],
 };
+
+const htmlFiles = globule.find("src/html/**/*.html");
+htmlFiles.forEach((src) => {
+  const htmlname = src.replace(/src\/html\//g, "");
+  const filename = htmlname.substring(0, htmlname.lastIndexOf("."));
+  config.plugins?.push(
+    new HtmlWebpackPlugin({
+      filename: `${path.resolve(__dirname, "dist")}/${htmlname}`,
+      inject: "body",
+      template: src,
+      minify: false,
+      chunks: [filename, `${filename}.css`],
+    })
+  );
+});
+
+export default config;
